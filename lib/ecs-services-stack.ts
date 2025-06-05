@@ -52,10 +52,13 @@ export class EcsServicesStack extends cdk.Stack {
       desiredCount: 1,
       redirectHTTP: true,
     });
-    this.mainApiService.targetGroup.configureHealthCheck({
-      path: '/api/v1/health',
-      healthyHttpCodes: '200',
-    });
+    const tg = this.mainApiService.targetGroup;
+    if (tg) {
+      tg.configureHealthCheck({
+        path: '/api/v1/health',
+        healthyHttpCodes: '200',
+      });
+    }
 
     // Output the ALB DNS name
     new cdk.CfnOutput(this, 'MainApiALBDns', {
